@@ -14,5 +14,5 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.removeCard = (req, res) => {
-  console.log(req.user._id);с 
+  console.log(req.user._id);
 };
