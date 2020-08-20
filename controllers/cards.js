@@ -17,5 +17,4 @@ module.exports.removeCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => res.send({ data: card }))
     .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
-  console.log(req.user._id);
 };
