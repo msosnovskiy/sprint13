@@ -8,8 +8,18 @@ module.exports.getUsers = (req, res) => {
 
 module.exports.getUser = (req, res) => {
   User.findById(req.params.userId)
-    .then((user) => res.send({ data: user }))
-    .catch(() => res.status(404).send({ message: 'Пользователь не найден' }));
+    .then((user) => {
+      if (user === null) {
+        res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
+      }
+      res.send({ data: user });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
+      } else res.status(500).send({ message: 'На сервере произошла ошибка' });
+      res.send(err);
+    });
 };
 
 module.exports.createUser = (req, res) => {
@@ -18,6 +28,7 @@ module.exports.createUser = (req, res) => {
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      res.status(400).send({ message: err.message });
+      res.send(err.name);
+      // res.status(400).send({ message: err.message });
     });
 };
