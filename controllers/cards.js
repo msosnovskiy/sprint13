@@ -3,7 +3,7 @@ const Card = require('../models/card');
 module.exports.getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
-    .catch(() => res.status(404).send({ message: 'Запрашиваемый ресурс не найден' }));
+    .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
 };
 
 module.exports.createCard = (req, res) => {
@@ -14,7 +14,6 @@ module.exports.createCard = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: err.message });
       } else res.status(500).send({ message: 'На сервере произошла ошибка' });
-      res.send(err);
     });
 };
 
@@ -23,12 +22,13 @@ module.exports.removeCard = (req, res) => {
     .then((card) => {
       if (card === null) {
         res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
+        return;
       }
       res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
+        res.status(400).send({ message: `Не удалось удалить карточку с cardId - ${req.params.cardId}` });
       } else res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 };

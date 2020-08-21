@@ -11,14 +11,14 @@ module.exports.getUser = (req, res) => {
     .then((user) => {
       if (user === null) {
         res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
+        return;
       }
       res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
+        res.status(400).send({ message: `Не удалось найти пользователя с userId - ${req.params.userId}` });
       } else res.status(500).send({ message: 'На сервере произошла ошибка' });
-      res.send(err);
     });
 };
 
@@ -31,6 +31,5 @@ module.exports.createUser = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: err.message });
       } else res.status(500).send({ message: 'На сервере произошла ошибка' });
-      res.send(err);
     });
 };
