@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validatorUrl = require('validator').isURL;
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -17,9 +18,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'это поле является обязательным для заполения'],
     validate: {
-      validator(v) {
-        return /(^https?:\/\/)?[a-z0-9~_\-.]{2,}\.[a-z]{1,9}[aA-zZ0-9~_\-./?=&]+/.test(v);
-      },
+      validator: (v) => validatorUrl(v),
       message: 'передана некорректная ссылка',
     },
   },
